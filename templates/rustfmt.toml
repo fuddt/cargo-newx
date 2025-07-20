@@ -1,0 +1,8 @@
+# Rustfmt configuration
+# See: https://rust-lang.github.io/rustfmt/
+
+# Basic formatting options
+fn_call_width = 60
+struct_lit_width = 40
+chain_width = 40
+max_width = 80

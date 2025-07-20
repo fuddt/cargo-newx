@@ -1,0 +1,14 @@
+[package]
+name = "cargo-newx"
+version = "0.1.0"
+edition = "2024"
+description = "A cargo extension that creates new Rust projects with best practice configuration files"
+categories = ["command-line-utilities", "development-tools"]
+
+[[bin]]
+name = "cargo-newx"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1.0.98"
+clap = { version = "4.5.41", features = ["derive"] }

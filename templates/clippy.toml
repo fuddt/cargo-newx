@@ -1,0 +1,28 @@
+# Clippy configuration
+# See: https://doc.rust-lang.org/clippy/configuration.html
+
+# Lint configuration
+too-many-arguments-threshold = 5
+type-complexity-threshold = 250
+single-char-lifetime-names-threshold = 4
+trivial-copy-size-limit = 64
+
+# Cognitive complexity
+cognitive-complexity-threshold = 30
+
+# Doc comment lints
+missing-docs-in-private-items = false
+
+# Performance lints
+large-types-passed-by-value = 256
+
+# Style lints
+enum-variant-names-threshold = 3
+struct-excessive-bools = 3
+
+# Restriction lints (uncomment to enable stricter linting)
+# disallowed-names = ["foo", "baz", "quux"]
+# disallowed-types = ["std::collections::HashMap"]
+
+# Allow certain lints that might be too strict for development
+# msrv = "1.70.0"  # Minimum Supported Rust Version
