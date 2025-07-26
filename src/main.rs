@@ -25,6 +25,10 @@ struct Args {
     /// Add both rustfmt.toml and clippy.toml configurations
     #[arg(long)]
     all: bool,
+
+    /// Skip .gitignore generation
+    #[arg(long)]
+    no_gitignore: bool,
 }
 
 fn main() -> Result<()> {
@@ -55,7 +59,13 @@ fn main() -> Result<()> {
 
     println!("Created new Rust project: {}", args.project_name);
 
-    // Always add rustfmt.toml (default behavior)
+    // Always add .gitignore to current directory (unless --no-gitignore is specified)
+    if !args.no_gitignore {
+        copy_gitignore_file()?;
+        println!("Added .gitignore to current directory");
+    }
+
+    // Always add rustfmt.toml to project directory (default behavior)
     copy_template_file(&args.project_name, "rustfmt.toml")?;
     println!("Added rustfmt.toml configuration");
 
@@ -95,6 +105,46 @@ fn copy_template_file(project_name: &str, template_name: &str) -> Result<()> {
         .with_context(|| format!("Failed to read template file: {}", template_path.display()))?;
 
     let dest_path = Path::new(project_name).join(template_name);
+    fs::write(&dest_path, content)
+        .with_context(|| format!("Failed to write file: {}", dest_path.display()))?;
+
+    Ok(())
+}
+
+fn copy_gitignore_file() -> Result<()> {
+    // Get the directory where the binary is located
+    let exe_dir = std::env::current_exe()
+        .context("Failed to get current executable path")?
+        .parent()
+        .context("Failed to get executable parent directory")?
+        .to_path_buf();
+
+    // Look for templates directory relative to the binary
+    let template_path = exe_dir.join("../templates").join(".gitignore");
+    
+    // If not found, try relative to current directory (for development)
+    let template_path = if template_path.exists() {
+        template_path
+    } else {
+        PathBuf::from("templates").join(".gitignore")
+    };
+
+    if !template_path.exists() {
+        anyhow::bail!("Template file '.gitignore' not found");
+    }
+
+    let content = fs::read_to_string(&template_path)
+        .with_context(|| format!("Failed to read template file: {}", template_path.display()))?;
+
+    // .gitignore is placed in the current directory, not in the project directory
+    let dest_path = Path::new(".gitignore");
+    
+    // Check if .gitignore already exists
+    if dest_path.exists() {
+        println!("Warning: .gitignore already exists in current directory, skipping");
+        return Ok(());
+    }
+    
     fs::write(&dest_path, content)
         .with_context(|| format!("Failed to write file: {}", dest_path.display()))?;
 

@@ -1,0 +1,28 @@
+# Rust build and dependency files
+*target*
+**/*.rs.bk
+
+# Cargo package files
+Cargo.lock
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# By-products of 'cargo test', 'cargo bench', etc.
+/*.log
+
+# Node modules (if using frontend)
+/node_modules/
+
+# MacOS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+
+# Coverage and profiling
+/coverage/
+*.profraw
